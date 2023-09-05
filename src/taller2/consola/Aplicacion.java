@@ -5,12 +5,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
+
+import taller2.modelo.Combo;
 import taller2.modelo.Ingrediente;
+import taller2.modelo.Pedido;
 import taller2.modelo.ProductoMenu;
 import taller2.modelo.Restaurante;
 
 public class Aplicacion {
-	private static Restaurante restaurante;
+	private Restaurante restaurante;
+	public Aplicacion() {
+        restaurante = new Restaurante(); // Initialize the restaurante object in the constructor
+    }
 	
 	// en las ejecuciones de las funciones del menu de la aplicacion
 	// donde necesite algo de Restaurante, lo llamo como restaurante
@@ -20,8 +26,7 @@ public class Aplicacion {
 
 		boolean sigapfythx = true;
 		while (sigapfythx)
-		{	System.out.println("whaat");
-
+		{
 			try
 			{
 				mostrarMenu();
@@ -30,7 +35,16 @@ public class Aplicacion {
 				//PENDIENTE añadir el resto de ejecuciones
 				// ej: ejecutarNuevoPedido
 				if (opcionsele == 1)
-					ejecutarCargarIngredientes();
+					ejecutarCargarRestaurante();
+				else if (opcionsele == 2)
+				{
+					String nombre = (input("A nombre de quién quiere hacer el pedido?\n"));
+					String direccion = (input("Direccion:\n"));
+		            Pedido pedido = restaurante.iniciarPedido(nombre, direccion);
+	                System.out.println("Pedido #" + pedido.getIdPedido() + " creado.");
+
+				}
+				
 				else if (opcionsele == 6)
 				{
 					System.out.println("Saliendo de la aplicacion...");
@@ -65,17 +79,17 @@ public class Aplicacion {
 	}
 	//PENDIENTE hacer el view de las opciones del menu,
 	// de las funciones
-	private void ejecutarCargarIngredientes()
+	private void ejecutarCargarRestaurante()
 	{
 		System.out.println("\n" + "Cargar un archivo de ingredientes" + "\n");
 		String archivoIngre = "./data/ingredientes.txt";
 		String archivoMenu = "./data/menu.txt";
-		String archivoComb = "./data/menu.txt";
+		String archivoComb = "./data/combos.txt";
 		ArrayList<ProductoMenu> menuBase;
 		ArrayList<Ingrediente> ingredientes;
+		ArrayList<Combo> combo;
 		
-		ingredientes = Restaurante.cargarIngredientes(archivoIngre);
-		menuBase = Restaurante.cargarMenu(archivoMenu);
+		restaurante = Restaurante.cargarInformacionRestaurante(archivoIngre, archivoMenu, archivoComb);
 
 	}
 	
@@ -85,8 +99,9 @@ public class Aplicacion {
 	{	
 		
 		Aplicacion app = new Aplicacion();
-		app.ejecutarAplicacion();
-		
+
+	    app.ejecutarAplicacion();
+
 		/*
 	
 		System.out.println("AAAA");

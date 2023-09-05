@@ -24,10 +24,16 @@ public class Restaurante {
 	}
 	
 	
-	public void iniciarPedido(String nombreCliente, String direccionCliente)
+	public Pedido iniciarPedido(String nombreCliente, String direccionCliente)
 	{
-		// PENDIENTE
-		
+		Pedido nuevoPedido = new Pedido(nombreCliente, direccionCliente);
+
+	    pedidos.add(nuevoPedido);
+
+	    pedidoEnCurso = nuevoPedido;
+	    System.out.println("Pedido iniciado para " + nombreCliente + " en " + direccionCliente);	
+	    
+	    return nuevoPedido;
 	}
 	
 	public void cerrarYGuardarPedido()
@@ -53,11 +59,21 @@ public class Restaurante {
 		
 	}
 	
-	public void cargarInformacionRestaurante(File archivoIngredientes, File archivoMenu, File archivoCombos)
+	public static Restaurante cargarInformacionRestaurante(String archivoIngredientes, String archivoMenu, String archivoCombos)
 	{
+		ArrayList<Ingrediente> ingredientes = cargarIngredientes(archivoIngredientes);
+
+	    // Call the cargarMenu method and store the result
+	    ArrayList<ProductoMenu> menu = cargarMenu(archivoMenu);
+
+	    // Call the cargarCombos method and store the result
+	    ArrayList<Combo> combos = cargarCombos(archivoCombos);
+		return null;
+
+		
 	}
 	
-	public static ArrayList<Ingrediente> cargarIngredientes(String archivoIngr)
+	private static ArrayList<Ingrediente> cargarIngredientes(String archivoIngr)
 	{	
 		ArrayList<Ingrediente> ingredientes = new ArrayList<>();
 		try {
@@ -74,7 +90,7 @@ public class Restaurante {
 	                if (elIngrediente == null) {
 	                    elIngrediente = new Ingrediente(nombre, precio);
 	                    ingredientes.add(elIngrediente);
-	                    System.out.println(nombre);
+	                    System.out.println("Ingrediente ID: " + elIngrediente.getId() + ", Nombre: " + nombre);
 	                }
 	            } else {
 	                // Handle lines that do not match the expected format
@@ -110,7 +126,7 @@ public class Restaurante {
 	}
 
 	
-	public static ArrayList<ProductoMenu> cargarMenu(String archivoMenu)
+	private static ArrayList<ProductoMenu> cargarMenu(String archivoMenu)
 	{
 		ArrayList<ProductoMenu> menu = new ArrayList<>();
 		try {
@@ -127,7 +143,7 @@ public class Restaurante {
 	                if (elProduMenu == null) {
 	                    elProduMenu = new ProductoMenu(nombre, precio);
 	                    menu.add(elProduMenu);
-	                    System.out.println(nombre);
+	                    System.out.println("ProductoMenu ID: " + elProduMenu.getId() + ", Nombre: " + nombre);
 	                }
 	            } else {
 	                // Handle lines that do not match the expected format
@@ -164,7 +180,7 @@ public class Restaurante {
 
 	
 	
-	public static ArrayList<Combo> cargarCombos(String archivoCombos)
+	private static ArrayList<Combo> cargarCombos(String archivoCombos)
 	{
 		ArrayList<Combo> combo = new ArrayList();
 		try {
@@ -175,45 +191,51 @@ public class Restaurante {
 	            String[] partes = linea.split(";");
 	            if (partes.length == 5) {
 	                String nombre = partes[0].trim();
-	                double precio = Double.parseDouble(partes[1].trim());
+	                String descuento0 = partes[1].trim();
+	                double descuento = Double.parseDouble(descuento0.replace("%", ""));
 	                String hamburguesa = partes[2].trim();
 	                String papas = partes[3].trim();
 	                String bebida = partes[4].trim();
-
+	                Combo elCombo = buscarCombo(combo,nombre);
+	                if (elCombo == null) {
+	                    elCombo = new Combo(nombre, descuento);
+	                    combo.add(elCombo);
+	                    System.out.println("Combo ID: " + elCombo.getId() + ", Nombre: " + nombre);
+	                }
+	            } else {
+	                // Handle lines that do not match the expected format
+	                System.err.println("Invalid line: " + linea);
 	            }
-	
 	        }
-	        
-		}
+
+	        br.close();
+	            }
 	        catch (FileNotFoundException e) {
 		        e.printStackTrace();
 		    } catch (IOException e) {
 		        e.printStackTrace();
 		    }
+		return combo;
 		}
-	//hacer buscar combo para terminar la carga de combos
 	
-
-
-	private static ProductoMenu buscarMenu(ArrayList<ProductoMenu> menu, String nombreMenu, int precioBase)
+	private static Combo buscarCombo(ArrayList<Combo> combo, String nombreCom)
 	{
-		ProductoMenu elProduMenu = null;
+		Combo elCombo = null;
 
-		for (int i = menu.size() - 1; i >= 0 && elProduMenu == null; i--)
+		for (int i = combo.size() - 1; i >= 0 && elCombo == null; i--)
 		{
-			ProductoMenu unProduMenu = menu.get(i);
-			if (unProduMenu.getNombre().equals(nombreMenu) && unProduMenu.getPrecio() == precioBase)
+			Combo unCombo = combo.get(i);
+			if (unCombo.getNombre().equals(nombreCom))
 			{
-				elProduMenu = unProduMenu;
+				elCombo = unCombo;
 			}
 		}
 
-		return elProduMenu;
+		return elCombo;
 	}
 
 	
 	
-	// PENDEINTE how tf is this done ????? public Restaurante();
+}
 	
 
-}
