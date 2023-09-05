@@ -37,14 +37,9 @@ public class Aplicacion {
 				if (opcionsele == 1)
 					ejecutarCargarRestaurante();
 				else if (opcionsele == 2)
-				{
-					String nombre = (input("A nombre de quién quiere hacer el pedido?\n"));
-					String direccion = (input("Direccion:\n"));
-		            Pedido pedido = restaurante.iniciarPedido(nombre, direccion);
-	                System.out.println("Pedido #" + pedido.getIdPedido() + " creado.");
-
-				}
-				
+					ejecutarIniciarPedido();
+				else if (opcionsele == 3) 
+					ejecutarAgregarElemento();
 				else if (opcionsele == 6)
 				{
 					System.out.println("Saliendo de la aplicacion...");
@@ -89,10 +84,39 @@ public class Aplicacion {
 		ArrayList<Ingrediente> ingredientes;
 		ArrayList<Combo> combo;
 		
-		restaurante = Restaurante.cargarInformacionRestaurante(archivoIngre, archivoMenu, archivoComb);
+		Restaurante.cargarInformacionRestaurante(archivoIngre, archivoMenu, archivoComb);
+
+	}
+	private void ejecutarIniciarPedido() {
+		String nombre = (input("A nombre de quién quiere hacer el pedido?\n"));
+		String direccion = (input("Direccion:\n"));
+        Pedido pedido = restaurante.iniciarPedido(nombre, direccion);
+        System.out.println("Pedido #" + pedido.getIdPedido() + " creado.");
 
 	}
 	
+	private void ejecutarAgregarElemento() {
+		System.out.println(Restaurante.cargarInformacionRestaurante("./data/ingredientes.txt", "./data/menu.txt", "./data/combos.txt"));
+		int tipoAgregar=Integer.parseInt(input("Quiere agregar un elemento del menu? (1=si , 0 =no)"));
+		if ((tipoAgregar) == 1) {
+			ArrayList<ProductoMenu> menuBase = Restaurante.cargarMenu("./data/menu.txt");
+			int idBuscado = Integer.parseInt(input("Seleccione el ID del elemento del MENU que quiera anadir:\n"));
+			Pedido pedidoEnCurso = restaurante.getPedidoEnCurso();
+	        
+	        if (pedidoEnCurso != null) {
+	            for (ProductoMenu unMenu : menuBase) {
+	                if (unMenu.getId() == idBuscado) {
+	                    pedidoEnCurso.agregarProducto(unMenu);
+	                }
+	            }
+	        } else {
+	            System.out.println("No hay un pedido en curso. Inicie un pedido primero.");
+	        }}		
+	        else if((tipoAgregar)==0) {
+	        	System.out.println("No se agrego ningun elemento a su pedido");
+			
+		}
+	}
 	
 	public static void main(String[] args)
 

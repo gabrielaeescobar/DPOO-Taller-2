@@ -26,13 +26,12 @@ public class Restaurante {
 	
 	public Pedido iniciarPedido(String nombreCliente, String direccionCliente)
 	{
+		pedidos = new ArrayList<>();
 		Pedido nuevoPedido = new Pedido(nombreCliente, direccionCliente);
-
 	    pedidos.add(nuevoPedido);
-
 	    pedidoEnCurso = nuevoPedido;
-	    System.out.println("Pedido iniciado para " + nombreCliente + " en " + direccionCliente);	
-	    
+	    int id = nuevoPedido.getIdPedido();
+	    System.out.println("Pedido iniciado para " + nombreCliente + " en " + direccionCliente + " con ID " + id);	
 	    return nuevoPedido;
 	}
 	
@@ -59,21 +58,35 @@ public class Restaurante {
 		
 	}
 	
-	public static Restaurante cargarInformacionRestaurante(String archivoIngredientes, String archivoMenu, String archivoCombos)
-	{
-		ArrayList<Ingrediente> ingredientes = cargarIngredientes(archivoIngredientes);
-
-	    // Call the cargarMenu method and store the result
+	public static Restaurante cargarInformacionRestaurante(String archivoIngredientes, String archivoMenu, String archivoCombos) {
+	    ArrayList<Ingrediente> ingredientes = cargarIngredientes(archivoIngredientes);
 	    ArrayList<ProductoMenu> menu = cargarMenu(archivoMenu);
-
-	    // Call the cargarCombos method and store the result
 	    ArrayList<Combo> combos = cargarCombos(archivoCombos);
-		return null;
-
-		
+	    // se un nuevo restaurante y se le inicializan los ingredientes, menu y combos
+	    Restaurante restaurante = new Restaurante();
+	    restaurante.setIngredientes(ingredientes);
+	    restaurante.setMenuBase(menu);
+	    restaurante.setCombos(combos);
+	    
+	    return restaurante;
 	}
 	
-	private static ArrayList<Ingrediente> cargarIngredientes(String archivoIngr)
+	///setters
+	
+	public void setIngredientes(ArrayList<Ingrediente> ingredientes) {
+        this.ingredientes = ingredientes;
+    }
+
+    public void setMenuBase(ArrayList<ProductoMenu> menuBase) {
+        this.menuBase = menuBase;
+    }
+
+    public void setCombos(ArrayList<Combo> combos) {
+        this.combos = combos;
+    }
+    /// final de setters
+	
+	public static ArrayList<Ingrediente> cargarIngredientes(String archivoIngr)
 	{	
 		ArrayList<Ingrediente> ingredientes = new ArrayList<>();
 		try {
@@ -126,7 +139,7 @@ public class Restaurante {
 	}
 
 	
-	private static ArrayList<ProductoMenu> cargarMenu(String archivoMenu)
+	public static ArrayList<ProductoMenu> cargarMenu(String archivoMenu)
 	{
 		ArrayList<ProductoMenu> menu = new ArrayList<>();
 		try {
