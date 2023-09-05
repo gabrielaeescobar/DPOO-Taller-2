@@ -1,4 +1,5 @@
 package taller2.consola;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class Aplicacion {
 					ejecutarIniciarPedido();
 				else if (opcionsele == 3) 
 					ejecutarAgregarElemento();
+				else if (opcionsele == 4)
+					ejecutarCerrarPedido();
 				else if (opcionsele == 6)
 				{
 					System.out.println("Saliendo de la aplicacion...");
@@ -118,36 +121,35 @@ public class Aplicacion {
 		}
 	}
 	
+	private void ejecutarCerrarPedido() {
+	    Pedido pedidoEnCurso = restaurante.getPedidoEnCurso();
+
+	    if (pedidoEnCurso != null) {
+	        int precioNeto = pedidoEnCurso.getPrecioNetoPedido();
+	        int iva = pedidoEnCurso.getPrecioIVAPedido();
+	        int precioTotal = precioNeto + iva;
+
+	        String facturaText = pedidoEnCurso.generarTextoFactura();
+	        System.out.println(facturaText);
+
+	        String fileName = "factura_pedido_" + pedidoEnCurso.getIdPedido() + ".txt";
+	        File facturaFile = new File(fileName);
+	        pedidoEnCurso.guardarFactura(facturaFile);
+	        restaurante.cerrarYGuardarPedido();
+
+	        System.out.println("Pedido cerrado y factura generada.");
+	    } else {
+	        System.out.println("No hay un pedido en curso para cerrar.");
+	    }
+	}
+	
+	
 	public static void main(String[] args)
 
 	{	
-		
 		Aplicacion app = new Aplicacion();
 
 	    app.ejecutarAplicacion();
-
-		/*
-	
-		System.out.println("AAAA");
-		System.out.print("aaaaaabgixhbwih\n");
-		Scanner scanner = new Scanner (System.in);
-	
-		System.out.println("what is ur name? ");
-		
-		String name = scanner.nextLine();
-		
-		System.out.println("how old r u? ");
-		int age = scanner.nextInt();
-		scanner.close();
-		System.out.println("hello "+ name);
-		System.out.println("ur "+ age + " years old");
-		int friends = 10;
-		friends = (int) ((double) friends / 3);
-		
-		
-		System.out.println(friends);
-
-		 */
-		 
+	 
 	}
 }
