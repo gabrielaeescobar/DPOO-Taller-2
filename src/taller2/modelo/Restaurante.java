@@ -37,9 +37,15 @@ public class Restaurante {
 	
 	public void cerrarYGuardarPedido()
 	{
-		// PENDIENTE
+		if (pedidoEnCurso != null) {
+	        // Close the current order and add it to the list of completed orders
+	        pedidos.add(pedidoEnCurso);
 
+	        // Clear the reference to the current order
+	        pedidoEnCurso = null;
+	    }
 	}
+
 	
 	public Pedido getPedidoEnCurso()
 	{
